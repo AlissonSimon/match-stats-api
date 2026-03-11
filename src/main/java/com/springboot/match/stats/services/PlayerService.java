@@ -51,6 +51,10 @@ public class PlayerService {
     }
 
     public void delete(Long id) {
+        if (!repository.existsById(id)) {
+            throw new RuntimeException("ID não encontrado");
+        }
+
         repository.deleteById(id);
     }
 
