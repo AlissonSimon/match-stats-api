@@ -6,5 +6,6 @@ public record PlayerResponseDTO(
         Long id,
         String nickname,
         Integer elo,
-        LocalDateTime createdAt
+        LocalDateTime createdAt,
+        LocalDateTime updatedAt
 ) {}
