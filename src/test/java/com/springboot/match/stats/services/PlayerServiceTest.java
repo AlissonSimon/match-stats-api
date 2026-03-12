@@ -22,6 +22,12 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 class PlayerServiceTest {
+    private static final Long ID_EXISTENT = 1L;
+    private static final Long ID_NON_EXISTENT = 99L;
+    private static final int DEFAULT_ELO = 1000;
+    private static final String NICKNAME_EXISTENT = "Fallen";
+    private static final String NICKNAME_UPDATED = "Coldzera";
+
     @InjectMocks
     private PlayerService service;
     @Mock
@@ -32,11 +38,11 @@ class PlayerServiceTest {
     @BeforeEach
     void setUp() {
         playerEntity = new Player();
-        playerEntity.setId(1L);
-        playerEntity.setNickname("Fallen");
-        playerEntity.setElo(1000);
+        playerEntity.setId(ID_EXISTENT);
+        playerEntity.setNickname(NICKNAME_EXISTENT);
+        playerEntity.setElo(DEFAULT_ELO);
 
-        playerRequest = new PlayerRequestDTO("Fallen");
+        playerRequest = new PlayerRequestDTO(NICKNAME_EXISTENT);
     }
 
     @Test
@@ -57,20 +63,20 @@ class PlayerServiceTest {
 
     @Test
     void should_find_player_by_id_when_id_exists() {
-        when(repository.findById(1L)).thenReturn(Optional.of(playerEntity));
+        when(repository.findById(ID_EXISTENT)).thenReturn(Optional.of(playerEntity));
 
-        PlayerResponseDTO result = service.findById(1L);
+        PlayerResponseDTO result = service.findById(ID_EXISTENT);
 
         assertNotNull(result);
-        assertEquals(1L, result.id());
-        assertEquals("Fallen", result.nickname());
-        assertEquals(1000, result.elo());
+        assertEquals(ID_EXISTENT, result.id());
+        assertEquals(NICKNAME_EXISTENT, result.nickname());
+        assertEquals(DEFAULT_ELO, result.elo());
 
-        verify(repository, times(1)).findById(1L);
+        verify(repository, times(1)).findById(ID_EXISTENT);
     }
 
     @Test
-    void should_insert_an_player_and_return_player_response_dto() {
+    void should_insert_player_and_return_player_response_dto() {
         when(repository.save(any(Player.class))).thenReturn(playerEntity);
 
         PlayerResponseDTO result = service.insert(playerRequest);
@@ -84,27 +90,27 @@ class PlayerServiceTest {
     }
 
     @Test
-    void should_update_an_player_and_return_updated_player() {
-        when(repository.getReferenceById(1L)).thenReturn(playerEntity);
+    void should_update_player_and_return_updated_player() {
+        when(repository.findById(ID_EXISTENT)).thenReturn(Optional.of(playerEntity));
         when(repository.save(any(Player.class))).thenReturn(playerEntity);
 
-        PlayerRequestDTO updatedRequest = new PlayerRequestDTO("Coldzera");
-        PlayerResponseDTO updatedResponse = service.update(1L, updatedRequest);
+        PlayerRequestDTO updatedRequest = new PlayerRequestDTO(NICKNAME_UPDATED);
+        PlayerResponseDTO updatedResponse = service.update(ID_EXISTENT, updatedRequest);
 
         assertNotNull(updatedResponse);
-        assertEquals("Coldzera", updatedResponse.nickname());
+        assertEquals(NICKNAME_UPDATED, updatedResponse.nickname());
 
-        verify(repository, times(1)).getReferenceById(1L);
+        verify(repository, times(1)).findById(ID_EXISTENT);
         verify(repository, times(1)).save(playerEntity);
     }
 
     @Test
-    void should_delete_an_player_by_id() {
-        when(repository.existsById(1L)).thenReturn(true);
+    void should_delete_player_by_id() {
+        when(repository.existsById(ID_EXISTENT)).thenReturn(true);
 
-        service.delete(1L);
+        service.delete(ID_EXISTENT);
 
-        verify(repository, times(1)).deleteById(1L);
+        verify(repository, times(1)).deleteById(ID_EXISTENT);
     }
 
     @Test
@@ -116,11 +122,11 @@ class PlayerServiceTest {
 
     @Test
     void should_throw_exception_when_id_is_not_found() {
-        when(repository.findById(2L)).thenReturn(Optional.empty());
+        when(repository.findById(ID_NON_EXISTENT)).thenReturn(Optional.empty());
 
-        assertThrows(RuntimeException.class, () -> service.findById(2L));
+        assertThrows(ResourceNotFoundException.class, () -> service.findById(ID_NON_EXISTENT));
 
-        verify(repository, times(1)).findById(2L);
+        verify(repository, times(1)).findById(ID_NON_EXISTENT);
     }
 
     @Test
