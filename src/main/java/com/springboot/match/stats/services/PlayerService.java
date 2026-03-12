@@ -2,6 +2,8 @@ package com.springboot.match.stats.services;
 
 import com.springboot.match.stats.dtos.PlayerRequestDTO;
 import com.springboot.match.stats.dtos.PlayerResponseDTO;
+import com.springboot.match.stats.services.exceptions.NicknameAlreadyExistsException;
+import com.springboot.match.stats.services.exceptions.ResourceNotFoundException;
 import com.springboot.match.stats.models.Player;
 import com.springboot.match.stats.repositories.PlayerRepository;
 import lombok.RequiredArgsConstructor;
@@ -28,12 +30,14 @@ public class PlayerService {
     @Transactional(readOnly = true)
     public PlayerResponseDTO findById(Long id) {
         Player player = repository.findById(id)
-                .orElseThrow(() -> new RuntimeException());
+                .orElseThrow(() -> new ResourceNotFoundException());
         return toResponseDTO(player);
     }
 
     @Transactional
     public PlayerResponseDTO insert(PlayerRequestDTO dto) {
+        validateIfNicknameExists(dto);
+
         Player player = new Player();
 
         player.setNickname(dto.nickname());
@@ -45,7 +49,13 @@ public class PlayerService {
 
     @Transactional
     public PlayerResponseDTO update(Long id, PlayerRequestDTO dto) {
-        Player player = repository.getReferenceById(id);
+        Player player = repository.findById(id)
+                .orElseThrow(ResourceNotFoundException::new);
+
+        if (!player.getNickname().equals(dto.nickname())) {
+            validateIfNicknameExists(dto);
+        }
+
         updateData(player, dto);
 
         player = repository.save(player);
@@ -60,7 +70,7 @@ public class PlayerService {
     @Transactional
     public void delete(Long id) {
         if (!repository.existsById(id)) {
-            throw new RuntimeException("ID não encontrado");
+            throw new ResourceNotFoundException();
         }
 
         repository.deleteById(id);
@@ -68,6 +78,12 @@ public class PlayerService {
 
     public void updateData(Player entity, PlayerRequestDTO dto) {
         entity.setNickname(dto.nickname());
+    }
+
+    public void validateIfNicknameExists(PlayerRequestDTO dto) {
+        if (repository.existsByNickname(dto.nickname())) {
+            throw new NicknameAlreadyExistsException();
+        }
     }
 
     public PlayerResponseDTO toResponseDTO(Player player) {
