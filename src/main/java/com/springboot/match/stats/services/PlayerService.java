@@ -6,6 +6,7 @@ import com.springboot.match.stats.models.Player;
 import com.springboot.match.stats.repositories.PlayerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -16,6 +17,7 @@ public class PlayerService {
 
     private final PlayerRepository repository;
 
+    @Transactional(readOnly = true)
     public List<PlayerResponseDTO> findAll() {
         return repository.findAll()
                 .stream()
@@ -23,12 +25,14 @@ public class PlayerService {
                 .toList();
     }
 
+    @Transactional(readOnly = true)
     public PlayerResponseDTO findById(Long id) {
         Player player = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException());
         return toResponseDTO(player);
     }
 
+    @Transactional
     public PlayerResponseDTO insert(PlayerRequestDTO dto) {
         Player player = new Player();
 
@@ -39,17 +43,21 @@ public class PlayerService {
         return toResponseDTO(player);
     }
 
+    @Transactional
     public PlayerResponseDTO update(Long id, PlayerRequestDTO dto) {
         Player player = repository.getReferenceById(id);
         updateData(player, dto);
+
         player = repository.save(player);
         return toResponseDTO(player);
     }
 
+    @Transactional
     public void deleteAll() {
         repository.deleteAll();
     }
 
+    @Transactional
     public void delete(Long id) {
         if (!repository.existsById(id)) {
             throw new RuntimeException("ID não encontrado");
