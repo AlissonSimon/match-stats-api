@@ -4,6 +4,8 @@ import com.springboot.match.stats.dtos.PlayerRequestDTO;
 import com.springboot.match.stats.dtos.PlayerResponseDTO;
 import com.springboot.match.stats.models.Player;
 import com.springboot.match.stats.repositories.PlayerRepository;
+import com.springboot.match.stats.services.exceptions.NicknameAlreadyExistsException;
+import com.springboot.match.stats.services.exceptions.ResourceNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
@@ -133,8 +135,20 @@ class PlayerServiceTest {
     void should_throw_exception_when_id_is_not_deleted() {
         when(repository.existsById(2L)).thenReturn(false);
 
-        assertThrows(RuntimeException.class, () -> service.delete(2L));
+        assertThrows(NicknameAlreadyExistsException.class, () -> service.insert(playerRequest));
 
-        verify(repository, never()).deleteById(2L);
+        verify(repository, never()).save(any(Player.class));
+    }
+
+    @Test
+    void should_throw_exception_on_duplicate_nickname_updating() {
+        when(repository.findById(ID_EXISTENT)).thenReturn(Optional.of(playerEntity));
+
+        PlayerRequestDTO conflictRequest = new PlayerRequestDTO(NICKNAME_UPDATED);
+        when(repository.existsByNickname(NICKNAME_UPDATED)).thenReturn(true);
+
+        assertThrows(NicknameAlreadyExistsException.class, () -> service.update(ID_EXISTENT, conflictRequest));
+
+        verify(repository, never()).save(any(Player.class));
     }
 }
