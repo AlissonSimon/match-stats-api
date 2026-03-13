@@ -133,11 +133,11 @@ class PlayerServiceTest {
 
     @Test
     void should_throw_exception_when_id_is_not_deleted() {
-        when(repository.existsById(2L)).thenReturn(false);
+        when(repository.existsById(anyLong())).thenReturn(false);
 
-        assertThrows(NicknameAlreadyExistsException.class, () -> service.insert(playerRequest));
+        assertThrows(ResourceNotFoundException.class, () -> service.delete(ID_NON_EXISTENT));
 
-        verify(repository, never()).save(any(Player.class));
+        verify(repository, never()).deleteById(anyLong());
     }
 
     @Test
