@@ -37,7 +37,7 @@ public class MatchService {
 
         match.setMapName(dto.mapName());
 
-        repository.save(match);
+        match = repository.save(match);
         return toResponseDTO(match);
     }
 
