@@ -1,4 +1,4 @@
-package com.springboot.match.stats.dtos;
+package com.springboot.match.stats.dtos.match;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;

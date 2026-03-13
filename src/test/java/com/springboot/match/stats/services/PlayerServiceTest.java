@@ -1,7 +1,7 @@
 package com.springboot.match.stats.services;
 
-import com.springboot.match.stats.dtos.PlayerRequestDTO;
-import com.springboot.match.stats.dtos.PlayerResponseDTO;
+import com.springboot.match.stats.dtos.player.PlayerRequestDTO;
+import com.springboot.match.stats.dtos.player.PlayerResponseDTO;
 import com.springboot.match.stats.models.Player;
 import com.springboot.match.stats.repositories.PlayerRepository;
 import com.springboot.match.stats.services.exceptions.NicknameAlreadyExistsException;

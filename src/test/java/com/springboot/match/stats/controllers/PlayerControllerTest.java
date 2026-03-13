@@ -2,8 +2,8 @@ package com.springboot.match.stats.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.springboot.match.stats.dtos.PlayerRequestDTO;
-import com.springboot.match.stats.dtos.PlayerResponseDTO;
+import com.springboot.match.stats.dtos.player.PlayerRequestDTO;
+import com.springboot.match.stats.dtos.player.PlayerResponseDTO;
 import com.springboot.match.stats.services.exceptions.NicknameAlreadyExistsException;
 import com.springboot.match.stats.services.exceptions.ResourceNotFoundException;
 import com.springboot.match.stats.services.PlayerService;

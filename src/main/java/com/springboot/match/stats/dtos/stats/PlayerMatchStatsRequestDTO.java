@@ -1,4 +1,4 @@
-package com.springboot.match.stats.dtos;
+package com.springboot.match.stats.dtos.stats;
 
 import com.springboot.match.stats.models.enums.ResultType;
 import jakarta.validation.constraints.NotNull;

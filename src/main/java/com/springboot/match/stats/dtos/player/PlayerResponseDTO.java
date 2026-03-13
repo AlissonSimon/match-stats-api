@@ -1,4 +1,4 @@
-package com.springboot.match.stats.dtos;
+package com.springboot.match.stats.dtos.player;
 
 import java.time.LocalDateTime;
 

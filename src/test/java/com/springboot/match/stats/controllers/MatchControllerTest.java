@@ -1,8 +1,8 @@
 package com.springboot.match.stats.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.springboot.match.stats.dtos.MatchRequestDTO;
-import com.springboot.match.stats.dtos.MatchResponseDTO;
+import com.springboot.match.stats.dtos.match.MatchRequestDTO;
+import com.springboot.match.stats.dtos.match.MatchResponseDTO;
 import com.springboot.match.stats.services.MatchService;
 import com.springboot.match.stats.services.exceptions.ResourceNotFoundException;
 import org.junit.jupiter.api.*;

@@ -1,7 +1,7 @@
 package com.springboot.match.stats.controllers;
 
-import com.springboot.match.stats.dtos.MatchRequestDTO;
-import com.springboot.match.stats.dtos.MatchResponseDTO;
+import com.springboot.match.stats.dtos.match.MatchRequestDTO;
+import com.springboot.match.stats.dtos.match.MatchResponseDTO;
 import com.springboot.match.stats.services.MatchService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
