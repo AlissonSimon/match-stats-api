@@ -19,7 +19,7 @@ public class Match {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "map_name", unique = true)
+    @Column(name = "map_name")
     private String mapName;
     @Column(name = "played_at")
     @CreationTimestamp
