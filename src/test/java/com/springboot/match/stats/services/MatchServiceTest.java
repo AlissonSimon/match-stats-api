@@ -44,7 +44,7 @@ class MatchServiceTest {
     }
 
     @Test
-    void should_return_all_players() {
+    void should_return_all_matches() {
         List<Match> list = List.of(matchEntity);
         when(repository.findAll()).thenReturn(list);
 
@@ -59,7 +59,7 @@ class MatchServiceTest {
     }
 
     @Test
-    void should_find_player_by_id_when_id_exists() {
+    void should_find_matches_by_id_when_id_exists() {
         when(repository.findById(ID_EXISTENT)).thenReturn(Optional.of(matchEntity));
 
         MatchResponseDTO result = service.findById(ID_EXISTENT);
@@ -72,7 +72,7 @@ class MatchServiceTest {
     }
 
     @Test
-    void should_insert_player_and_return_player_response_dto() {
+    void should_insert_matches_and_return_match_response_dto() {
         when(repository.save(any(Match.class))).thenReturn(matchEntity);
 
         MatchResponseDTO result = service.insert(matchRequest);
