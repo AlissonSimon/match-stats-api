@@ -39,7 +39,14 @@ public class MatchService {
     public MatchResponseDTO insert(MatchRequestDTO dto) {
         Match match = new Match();
 
-        match.setMapName(dto.mapName());
+        GameMap mapEntity = gameMapRepository.findById(dto.gameMapId())
+                .orElseThrow(() -> new ResourceNotFoundException());
+
+        if (!mapEntity.isActive()) {
+            throw new InactiveMapException();
+        }
+
+        match.setMap(mapEntity);
 
         match = repository.save(match);
         return toResponseDTO(match);
