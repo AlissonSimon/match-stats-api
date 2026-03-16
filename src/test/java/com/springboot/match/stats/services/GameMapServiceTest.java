@@ -7,6 +7,7 @@ import com.springboot.match.stats.models.GameMap;
 import com.springboot.match.stats.repositories.GameMapRepository;
 import com.springboot.match.stats.services.exceptions.MapAlreadyExistsException;
 import com.springboot.match.stats.services.exceptions.ResourceNotFoundException;
+import com.springboot.match.stats.services.exceptions.StatusAlreadySetException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
@@ -29,7 +30,7 @@ class GameMapServiceTest {
     private static final Long ID_NON_EXISTENT = 99L;
     private static final String NAME_EXISTENT = "Mirage";
     private static final boolean ACTIVE = true;
-    private static final boolean DISABLED = false;
+    private static final boolean INACTIVE = false;
 
     @InjectMocks
     private GameMapService service;
@@ -99,11 +100,11 @@ class GameMapServiceTest {
         when(repository.findById(ID_EXISTENT)).thenReturn(Optional.of(gameMapEntity));
         when(repository.save(any(GameMap.class))).thenReturn(gameMapEntity);
 
-        GameMapStatusRequestDTO updatedRequest = new GameMapStatusRequestDTO(DISABLED);
+        GameMapStatusRequestDTO updatedRequest = new GameMapStatusRequestDTO(INACTIVE);
         GameMapResponseDTO updatesResponse = service.update(ID_EXISTENT, updatedRequest);
 
         assertNotNull(updatesResponse);
-        assertEquals(DISABLED, updatesResponse.active());
+        assertEquals(INACTIVE, updatesResponse.active());
 
         verify(repository, times(1)).findById(ID_EXISTENT);
         verify(repository, times(1)).save(gameMapEntity);
@@ -125,6 +126,26 @@ class GameMapServiceTest {
         assertThrows(ResourceNotFoundException.class, () -> service.findById(ID_NON_EXISTENT));
 
         verify(repository, times(1)).findById(ID_NON_EXISTENT);
+    }
+
+    @Test
+    void should_throw_exception_when_updating_non_existent_id() {
+        when(repository.findById(ID_NON_EXISTENT)).thenReturn(Optional.empty());
+
+        assertThrows(ResourceNotFoundException.class, () -> service.update(ID_NON_EXISTENT, gameMapStatusRequest));
+
+        verify(repository, times(1)).findById(ID_NON_EXISTENT);
+        verify(repository, never()).save(any());
+    }
+
+    @Test
+    void should_throw_exception_when_update_status_is_already_set() {
+        when(repository.findById(ID_EXISTENT)).thenReturn(Optional.of(gameMapEntity));
+
+        assertThrows(StatusAlreadySetException.class, () -> service.update(ID_EXISTENT, gameMapStatusRequest));
+
+        verify(repository, times(1)).findById(ID_EXISTENT);
+        verify(repository, never()).save(any());
     }
 
     @Test
