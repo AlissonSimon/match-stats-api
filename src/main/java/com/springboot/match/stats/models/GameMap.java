@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "tb_maps")
@@ -21,8 +21,8 @@ public class GameMap {
     private Long id;
     @Column(name = "name", unique = true)
     private String name;
-    @Column(name = "is_active")
-    private boolean isActive;
+    @Column(name = "active")
+    private boolean active;
     @Column(name = "created_at")
     @CreationTimestamp
     private LocalDateTime createdAt;
