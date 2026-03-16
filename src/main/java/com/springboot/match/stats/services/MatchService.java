@@ -2,8 +2,11 @@ package com.springboot.match.stats.services;
 
 import com.springboot.match.stats.dtos.match.MatchRequestDTO;
 import com.springboot.match.stats.dtos.match.MatchResponseDTO;
+import com.springboot.match.stats.models.GameMap;
 import com.springboot.match.stats.models.Match;
+import com.springboot.match.stats.repositories.GameMapRepository;
 import com.springboot.match.stats.repositories.MatchRepository;
+import com.springboot.match.stats.services.exceptions.InactiveMapException;
 import com.springboot.match.stats.services.exceptions.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,12 +18,13 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MatchService {
     private final MatchRepository repository;
+    private final GameMapRepository gameMapRepository;
 
     @Transactional(readOnly = true)
     public List<MatchResponseDTO> findAll() {
         return repository.findAll()
                 .stream()
-                .map(match -> new MatchResponseDTO(match.getId(), match.getMapName(), match.getPlayedAt()))
+                .map(match -> new MatchResponseDTO(match.getId(), match.getMap().getName(), match.getPlayedAt()))
                 .toList();
     }
 
@@ -44,7 +48,7 @@ public class MatchService {
     private MatchResponseDTO toResponseDTO(Match match) {
         return new MatchResponseDTO(
                 match.getId(),
-                match.getMapName(),
+                match.getMap().getName(),
                 match.getPlayedAt()
         );
     }
