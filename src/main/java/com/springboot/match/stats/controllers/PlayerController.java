@@ -3,6 +3,7 @@ package com.springboot.match.stats.controllers;
 import com.springboot.match.stats.dtos.player.PlayerRequestDTO;
 import com.springboot.match.stats.dtos.player.PlayerResponseDTO;
 import com.springboot.match.stats.services.PlayerService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -30,7 +31,7 @@ public class PlayerController {
     }
 
     @PostMapping
-    public ResponseEntity<PlayerResponseDTO> insert(@RequestBody PlayerRequestDTO objDto) {
+    public ResponseEntity<PlayerResponseDTO> insert(@Valid @RequestBody PlayerRequestDTO objDto) {
         PlayerResponseDTO response = service.insert(objDto);
         URI uri = ServletUriComponentsBuilder
                 .fromCurrentRequest()
@@ -41,7 +42,7 @@ public class PlayerController {
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<PlayerResponseDTO> update(@PathVariable Long id, @RequestBody PlayerRequestDTO objDto) {
+    public ResponseEntity<PlayerResponseDTO> update(@PathVariable Long id, @Valid @RequestBody PlayerRequestDTO objDto) {
         PlayerResponseDTO response = service.update(id, objDto);
         return ResponseEntity.ok().body(response);
     }

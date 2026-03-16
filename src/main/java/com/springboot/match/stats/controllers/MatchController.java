@@ -3,6 +3,7 @@ package com.springboot.match.stats.controllers;
 import com.springboot.match.stats.dtos.match.MatchRequestDTO;
 import com.springboot.match.stats.dtos.match.MatchResponseDTO;
 import com.springboot.match.stats.services.MatchService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -30,7 +31,7 @@ public class MatchController {
     }
 
     @PostMapping
-    public ResponseEntity<MatchResponseDTO> insert(@RequestBody MatchRequestDTO objDto) {
+    public ResponseEntity<MatchResponseDTO> insert(@Valid @RequestBody MatchRequestDTO objDto) {
         MatchResponseDTO response = service.insert(objDto);
         URI uri = ServletUriComponentsBuilder
                 .fromCurrentRequest()
