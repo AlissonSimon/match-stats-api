@@ -24,14 +24,14 @@ public class MatchService {
     public List<MatchResponseDTO> findAll() {
         return repository.findAll()
                 .stream()
-                .map(match -> new MatchResponseDTO(match.getId(), match.getMap().getName(), match.getPlayedAt()))
+                .map(this::toResponseDTO)
                 .toList();
     }
 
     @Transactional(readOnly = true)
     public MatchResponseDTO findById(Long id) {
         Match match = repository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException());
+                .orElseThrow(ResourceNotFoundException::new);
         return toResponseDTO(match);
     }
 
@@ -40,7 +40,7 @@ public class MatchService {
         Match match = new Match();
 
         GameMap mapEntity = gameMapRepository.findById(dto.gameMapId())
-                .orElseThrow(() -> new ResourceNotFoundException());
+                .orElseThrow(ResourceNotFoundException::new);
 
         if (!mapEntity.isActive()) {
             throw new InactiveMapException();

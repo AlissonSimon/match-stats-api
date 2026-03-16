@@ -22,14 +22,14 @@ public class GameMapService {
     public List<GameMapResponseDTO> findAll() {
         return repository.findAll()
                 .stream()
-                .map(gameMap -> new GameMapResponseDTO(gameMap.getId(), gameMap.getName(), gameMap.isActive(), gameMap.getCreatedAt()))
+                .map(this::toResponseDTO)
                 .toList();
     }
 
     @Transactional(readOnly = true)
     public GameMapResponseDTO findById(Long id) {
         GameMap gameMap = repository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException());
+                .orElseThrow(ResourceNotFoundException::new);
         return toResponseDTO(gameMap);
     }
 

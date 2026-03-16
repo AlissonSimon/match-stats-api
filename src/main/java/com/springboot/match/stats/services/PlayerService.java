@@ -23,14 +23,14 @@ public class PlayerService {
     public List<PlayerResponseDTO> findAll() {
         return repository.findAll()
                 .stream()
-                .map(player -> new PlayerResponseDTO(player.getId(), player.getNickname(), player.getElo(), player.getCreatedAt(), player.getUpdatedAt()))
+                .map(this::toResponseDTO)
                 .toList();
     }
 
     @Transactional(readOnly = true)
     public PlayerResponseDTO findById(Long id) {
         Player player = repository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException());
+                .orElseThrow(ResourceNotFoundException::new);
         return toResponseDTO(player);
     }
 
