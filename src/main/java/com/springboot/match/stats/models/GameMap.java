@@ -25,5 +25,5 @@ public class GameMap {
     private boolean isActive;
     @Column(name = "created_at")
     @CreationTimestamp
-    private LocalDate createdAt;
+    private LocalDateTime createdAt;
 }
