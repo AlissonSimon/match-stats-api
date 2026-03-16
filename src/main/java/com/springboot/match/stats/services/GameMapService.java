@@ -7,6 +7,7 @@ import com.springboot.match.stats.models.GameMap;
 import com.springboot.match.stats.repositories.GameMapRepository;
 import com.springboot.match.stats.services.exceptions.MapAlreadyExistsException;
 import com.springboot.match.stats.services.exceptions.ResourceNotFoundException;
+import com.springboot.match.stats.services.exceptions.StatusAlreadySetException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -51,6 +52,8 @@ public class GameMapService {
         GameMap gameMap = repository.findById(id)
                 .orElseThrow(ResourceNotFoundException::new);
 
+        validateIfMapStatusIsAlreadySet(gameMap, dto);
+
         updateMapStatus(gameMap, dto);
 
         gameMap = repository.save(gameMap);
@@ -69,6 +72,12 @@ public class GameMapService {
     private void validateIfMapAlreadyExists(GameMapRequestDTO dto) {
         if (repository.existsByName(dto.name())) {
             throw new MapAlreadyExistsException();
+        }
+    }
+
+    private void validateIfMapStatusIsAlreadySet(GameMap gameMap, GameMapStatusRequestDTO dto) {
+        if (gameMap.isActive() == dto.active()) {
+            throw new StatusAlreadySetException();
         }
     }
 
