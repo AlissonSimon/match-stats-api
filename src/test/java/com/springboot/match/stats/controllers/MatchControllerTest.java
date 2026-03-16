@@ -24,6 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class MatchControllerTest {
     private static final Long ID_EXISTENT = 1L;
     private static final Long ID_NON_EXISTENT = 99L;
+    private static final Long MAP_ID = 1L;
     private static final String MAP_NAME = "Train";
 
     @Autowired
@@ -39,7 +40,7 @@ class MatchControllerTest {
         objectMapper = new ObjectMapper();
 
         requestDTO = new MatchRequestDTO(
-                MAP_NAME
+                MAP_ID
         );
 
         responseDTO = new MatchResponseDTO(
