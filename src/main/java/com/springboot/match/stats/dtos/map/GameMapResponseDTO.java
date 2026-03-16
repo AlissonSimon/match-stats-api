@@ -5,6 +5,6 @@ import java.time.LocalDateTime;
 public record GameMapResponseDTO(
         Long id,
         String name,
-        boolean isActive,
+        boolean active,
         LocalDateTime createdAt
 ) {}
