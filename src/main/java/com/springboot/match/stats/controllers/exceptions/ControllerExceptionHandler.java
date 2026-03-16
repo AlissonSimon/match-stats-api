@@ -1,9 +1,6 @@
 package com.springboot.match.stats.controllers.exceptions;
 
-import com.springboot.match.stats.services.exceptions.InactiveMapException;
-import com.springboot.match.stats.services.exceptions.MapAlreadyExistsException;
-import com.springboot.match.stats.services.exceptions.NicknameAlreadyExistsException;
-import com.springboot.match.stats.services.exceptions.ResourceNotFoundException;
+import com.springboot.match.stats.services.exceptions.*;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -46,6 +43,15 @@ public class ControllerExceptionHandler {
     public ResponseEntity<StandardError> mapAlreadyExistsHandler(HttpServletRequest request) {
         String error = "Map already exists";
         String message = "This map already exists, choose another one";
+        HttpStatus status = HttpStatus.CONFLICT;
+        StandardError err = new StandardError(Instant.now(), status.value(), error, message, request.getRequestURI());
+        return ResponseEntity.status(status).body(err);
+    }
+
+    @ExceptionHandler(StatusAlreadySetException.class)
+    public ResponseEntity<StandardError> statusAlreadySetHandler(HttpServletRequest request) {
+        String error = "Map status already set error";
+        String message = "This status is already set";
         HttpStatus status = HttpStatus.CONFLICT;
         StandardError err = new StandardError(Instant.now(), status.value(), error, message, request.getRequestURI());
         return ResponseEntity.status(status).body(err);
