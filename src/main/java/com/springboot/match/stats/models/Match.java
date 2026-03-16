@@ -19,8 +19,9 @@ public class Match {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "map_name")
-    private String mapName;
+    @ManyToOne
+    @JoinColumn(name = "map_id")
+    private GameMap map;
     @Column(name = "played_at")
     @CreationTimestamp
     private LocalDateTime playedAt;
