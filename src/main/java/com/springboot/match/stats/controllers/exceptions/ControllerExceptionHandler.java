@@ -1,5 +1,7 @@
 package com.springboot.match.stats.controllers.exceptions;
 
+import com.springboot.match.stats.services.exceptions.InactiveMapException;
+import com.springboot.match.stats.services.exceptions.MapAlreadyExistsException;
 import com.springboot.match.stats.services.exceptions.NicknameAlreadyExistsException;
 import com.springboot.match.stats.services.exceptions.ResourceNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -36,6 +38,24 @@ public class ControllerExceptionHandler {
         String error = "Nickname already exists";
         String message = "This nickname already exists, choose another one";
         HttpStatus status = HttpStatus.CONFLICT;
+        StandardError err = new StandardError(Instant.now(), status.value(), error, message, request.getRequestURI());
+        return ResponseEntity.status(status).body(err);
+    }
+
+    @ExceptionHandler(MapAlreadyExistsException.class)
+    public ResponseEntity<StandardError> mapAlreadyExistsHandler(HttpServletRequest request) {
+        String error = "Map already exists";
+        String message = "This map already exists, choose another one";
+        HttpStatus status = HttpStatus.CONFLICT;
+        StandardError err = new StandardError(Instant.now(), status.value(), error, message, request.getRequestURI());
+        return ResponseEntity.status(status).body(err);
+    }
+
+    @ExceptionHandler(InactiveMapException.class)
+    public ResponseEntity<StandardError> inactiveMapHandler(HttpServletRequest request) {
+        String error = "Map is inactive";
+        String message = "This map is inactive, choose another one";
+        HttpStatus status = HttpStatus.UNPROCESSABLE_CONTENT;
         StandardError err = new StandardError(Instant.now(), status.value(), error, message, request.getRequestURI());
         return ResponseEntity.status(status).body(err);
     }
