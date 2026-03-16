@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
-public class GameMapRepositoryTest {
+class GameMapRepositoryTest {
     @Autowired
     TestEntityManager entityManager;
     @Autowired
