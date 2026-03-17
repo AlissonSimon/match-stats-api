@@ -8,6 +8,8 @@ public record PlayerMatchStatsRequestDTO(
         @NotNull
         Long playerId,
         @NotNull
+        Long matchId,
+        @NotNull
         ResultType resultType,
         @NotNull
         @PositiveOrZero
