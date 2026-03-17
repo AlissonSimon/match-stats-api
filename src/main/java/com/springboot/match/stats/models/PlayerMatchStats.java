@@ -19,10 +19,10 @@ public class PlayerMatchStats {
     private Long id;
     @ManyToOne
     @JoinColumn(name = "player_id")
-    private Player playerId;
+    private Player player;
     @ManyToOne
     @JoinColumn(name = "match_id")
-    private Match matchId;
+    private Match match;
     @Column(name = "result")
     @Enumerated(EnumType.STRING)
     private ResultType resultType;
