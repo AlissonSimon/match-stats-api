@@ -10,5 +10,7 @@ public record PlayerMatchStatsResponseDTO(
         Integer kills,
         Integer deaths,
         Integer assists,
-        Integer headshots
+        Integer headshots,
+        Double killDeathRatio,
+        Double headshotPercentage
 ) {}
