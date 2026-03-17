@@ -36,12 +36,9 @@ public class PlayerService {
 
     @Transactional
     public PlayerResponseDTO insert(PlayerRequestDTO dto) {
-        validateIfNicknameExists(dto);
+        validateIfEntityNicknameExists(dto);
 
-        Player player = new Player();
-
-        player.setNickname(dto.nickname());
-        player.setElo(DEFAULT_ELO);
+        Player player = toEntity(dto);
 
         player = repository.save(player);
         return toResponseDTO(player);
@@ -53,10 +50,10 @@ public class PlayerService {
                 .orElseThrow(ResourceNotFoundException::new);
 
         if (!player.getNickname().equals(dto.nickname())) {
-            validateIfNicknameExists(dto);
+            validateIfEntityNicknameExists(dto);
         }
 
-        updateData(player, dto);
+        updateEntityData(player, dto);
 
         player = repository.save(player);
         return toResponseDTO(player);
@@ -69,30 +66,43 @@ public class PlayerService {
 
     @Transactional
     public void delete(Long id) {
-        if (!repository.existsById(id)) {
-            throw new ResourceNotFoundException();
-        }
+        validateIfEntityExists(id);
 
         repository.deleteById(id);
     }
 
-    public void updateData(Player entity, PlayerRequestDTO dto) {
+    private void updateEntityData(Player entity, PlayerRequestDTO dto) {
         entity.setNickname(dto.nickname());
     }
 
-    public void validateIfNicknameExists(PlayerRequestDTO dto) {
+    private void validateIfEntityExists(Long id) {
+        if (!repository.existsById(id)) {
+            throw new ResourceNotFoundException();
+        }
+    }
+
+    private void validateIfEntityNicknameExists(PlayerRequestDTO dto) {
         if (repository.existsByNickname(dto.nickname())) {
             throw new NicknameAlreadyExistsException();
         }
     }
 
-    public PlayerResponseDTO toResponseDTO(Player player) {
+    private Player toEntity(PlayerRequestDTO dto) {
+        Player entity = new Player();
+
+        entity.setNickname(dto.nickname());
+        entity.setElo(DEFAULT_ELO);
+
+        return entity;
+    }
+
+    private PlayerResponseDTO toResponseDTO(Player entity) {
         return new PlayerResponseDTO(
-                player.getId(),
-                player.getNickname(),
-                player.getElo(),
-                player.getCreatedAt(),
-                player.getUpdatedAt()
+                entity.getId(),
+                entity.getNickname(),
+                entity.getElo(),
+                entity.getCreatedAt(),
+                entity.getUpdatedAt()
         );
     }
 }

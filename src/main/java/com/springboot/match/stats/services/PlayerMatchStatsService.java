@@ -53,11 +53,15 @@ public class PlayerMatchStatsService {
 
     @Transactional
     public void delete(Long id) {
+        validateIfEntityExists(id);
+
+        statsRepository.deleteById(id);
+    }
+
+    private void validateIfEntityExists(Long id) {
         if (!statsRepository.existsById(id)) {
             throw new ResourceNotFoundException();
         }
-
-        statsRepository.deleteById(id);
     }
 
     private void validateIfPlayerAlreadyHasStatsInTheMatch(PlayerMatchStatsRequestDTO dto) {
@@ -85,11 +89,11 @@ public class PlayerMatchStatsService {
     private PlayerMatchStats toEntity(PlayerMatchStatsRequestDTO dto) {
         PlayerMatchStats entity = new PlayerMatchStats();
 
-        Player player = playerRepository.findById(dto.playerId()).get();
-        Match match = matchRepository.findById(dto.matchId()).get();
+        Player playerEntity = playerRepository.findById(dto.playerId()).get();
+        Match matchEntity = matchRepository.findById(dto.matchId()).get();
 
-        entity.setPlayer(player);
-        entity.setMatch(match);
+        entity.setPlayer(playerEntity);
+        entity.setMatch(matchEntity);
         entity.setResultType(dto.resultType());
         entity.setKills(dto.kills());
         entity.setDeaths(dto.deaths());
@@ -99,18 +103,18 @@ public class PlayerMatchStatsService {
         return entity;
     }
 
-    private PlayerMatchStatsResponseDTO toResponseDTO(PlayerMatchStats playerStats) {
+    private PlayerMatchStatsResponseDTO toResponseDTO(PlayerMatchStats entity) {
         return new PlayerMatchStatsResponseDTO(
-                playerStats.getId(),
-                playerStats.getPlayer().getId(),
-                playerStats.getMatch().getId(),
-                playerStats.getResultType(),
-                playerStats.getKills(),
-                playerStats.getDeaths(),
-                playerStats.getAssists(),
-                playerStats.getHeadshots(),
-                playerStats.getKillDeathRatio(),
-                playerStats.getHeadshotPercentage()
+                entity.getId(),
+                entity.getPlayer().getId(),
+                entity.getMatch().getId(),
+                entity.getResultType(),
+                entity.getKills(),
+                entity.getDeaths(),
+                entity.getAssists(),
+                entity.getHeadshots(),
+                entity.getKillDeathRatio(),
+                entity.getHeadshotPercentage()
         );
     }
 }

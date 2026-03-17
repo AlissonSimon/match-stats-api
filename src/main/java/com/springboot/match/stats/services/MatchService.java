@@ -37,26 +37,49 @@ public class MatchService {
 
     @Transactional
     public MatchResponseDTO insert(MatchRequestDTO dto) {
-        Match match = new Match();
-
         GameMap mapEntity = gameMapRepository.findById(dto.gameMapId())
                 .orElseThrow(ResourceNotFoundException::new);
 
-        if (!mapEntity.isActive()) {
-            throw new InactiveMapException();
-        }
+        validateIfMapEntityIsActive(mapEntity);
 
-        match.setMap(mapEntity);
+        Match match = toEntity(mapEntity);
 
         match = repository.save(match);
         return toResponseDTO(match);
     }
 
-    private MatchResponseDTO toResponseDTO(Match match) {
+    @Transactional
+    public void delete(Long id) {
+        validateIfEntityExists(id);
+
+        repository.deleteById(id);
+    }
+
+    private void validateIfEntityExists(Long id) {
+        if (repository.existsById(id)) {
+            throw new ResourceNotFoundException();
+        }
+    }
+
+    private void validateIfMapEntityIsActive(GameMap entity) {
+        if (!entity.isActive()) {
+            throw  new InactiveMapException();
+        }
+    }
+
+    private Match toEntity(GameMap mapEntity) {
+        Match entity = new Match();
+
+        entity.setMap(mapEntity);
+
+        return entity;
+    }
+
+    private MatchResponseDTO toResponseDTO(Match entity) {
         return new MatchResponseDTO(
-                match.getId(),
-                match.getMap().getName(),
-                match.getPlayedAt()
+                entity.getId(),
+                entity.getMap().getName(),
+                entity.getPlayedAt()
         );
     }
 }

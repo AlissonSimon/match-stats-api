@@ -36,12 +36,9 @@ public class GameMapService {
 
     @Transactional
     public GameMapResponseDTO insert(GameMapRequestDTO dto) {
-        validateIfMapAlreadyExists(dto);
+        validateIfEntityNameAlreadyExists(dto);
 
-        GameMap gameMap = new GameMap();
-
-        gameMap.setName(dto.name());
-        gameMap.setActive(dto.active());
+        GameMap gameMap = toEntity(dto);
 
         gameMap = repository.save(gameMap);
         return toResponseDTO(gameMap);
@@ -52,9 +49,9 @@ public class GameMapService {
         GameMap gameMap = repository.findById(id)
                 .orElseThrow(ResourceNotFoundException::new);
 
-        validateIfMapStatusIsAlreadySet(gameMap, dto);
+        validateIfEntityStatusIsAlreadySet(gameMap, dto);
 
-        updateMapStatus(gameMap, dto);
+        updateEntityStatus(gameMap, dto);
 
         gameMap = repository.save(gameMap);
         return toResponseDTO(gameMap);
@@ -62,35 +59,48 @@ public class GameMapService {
 
     @Transactional
     public void delete(Long id) {
-        if (!repository.existsById(id)) {
-            throw new ResourceNotFoundException();
-        }
+        validateIfEntityExists(id);
 
         repository.deleteById(id);
     }
 
-    private void validateIfMapAlreadyExists(GameMapRequestDTO dto) {
+    private void validateIfEntityExists(Long id) {
+        if (!repository.existsById(id)) {
+            throw new ResourceNotFoundException();
+        }
+    }
+
+    private void validateIfEntityNameAlreadyExists(GameMapRequestDTO dto) {
         if (repository.existsByName(dto.name())) {
             throw new MapAlreadyExistsException();
         }
     }
 
-    private void validateIfMapStatusIsAlreadySet(GameMap gameMap, GameMapStatusRequestDTO dto) {
-        if (gameMap.isActive() == dto.active()) {
+    private void validateIfEntityStatusIsAlreadySet(GameMap entity, GameMapStatusRequestDTO dto) {
+        if (entity.isActive() == dto.active()) {
             throw new StatusAlreadySetException();
         }
     }
 
-    public void updateMapStatus(GameMap entity, GameMapStatusRequestDTO dto) {
+    private void updateEntityStatus(GameMap entity, GameMapStatusRequestDTO dto) {
         entity.setActive(dto.active());
     }
 
-    private GameMapResponseDTO toResponseDTO(GameMap gameMap) {
+    private GameMap toEntity(GameMapRequestDTO dto) {
+        GameMap entity = new GameMap();
+
+        entity.setName(dto.name());
+        entity.setActive(dto.active());
+
+        return entity;
+    }
+
+    private GameMapResponseDTO toResponseDTO(GameMap entity) {
         return new GameMapResponseDTO(
-                gameMap.getId(),
-                gameMap.getName(),
-                gameMap.isActive(),
-                gameMap.getCreatedAt()
+                entity.getId(),
+                entity.getName(),
+                entity.isActive(),
+                entity.getCreatedAt()
         );
     }
 }
