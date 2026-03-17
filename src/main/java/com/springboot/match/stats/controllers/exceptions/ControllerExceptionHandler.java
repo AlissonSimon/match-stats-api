@@ -57,10 +57,28 @@ public class ControllerExceptionHandler {
         return ResponseEntity.status(status).body(err);
     }
 
+    @ExceptionHandler(PlayerAlreadyHasStatsException.class)
+    public ResponseEntity<StandardError> playerAlreadyHasStatsHandler(HttpServletRequest request) {
+        String error = "Player already has stats error";
+        String message = "The player already has stats in this match";
+        HttpStatus status = HttpStatus.CONFLICT;
+        StandardError err = new StandardError(Instant.now(), status.value(), error, message, request.getRequestURI());
+        return ResponseEntity.status(status).body(err);
+    }
+
     @ExceptionHandler(InactiveMapException.class)
     public ResponseEntity<StandardError> inactiveMapHandler(HttpServletRequest request) {
         String error = "Map is inactive";
         String message = "This map is inactive, choose another one";
+        HttpStatus status = HttpStatus.UNPROCESSABLE_CONTENT;
+        StandardError err = new StandardError(Instant.now(), status.value(), error, message, request.getRequestURI());
+        return ResponseEntity.status(status).body(err);
+    }
+
+    @ExceptionHandler(HeadshotsExceedKillsException.class)
+    public ResponseEntity<StandardError> headshotExceedKillsHandler(HttpServletRequest request) {
+        String error = "Headshot exceed kills error";
+        String message = "The number of headshots exceed the number of kills";
         HttpStatus status = HttpStatus.UNPROCESSABLE_CONTENT;
         StandardError err = new StandardError(Instant.now(), status.value(), error, message, request.getRequestURI());
         return ResponseEntity.status(status).body(err);
