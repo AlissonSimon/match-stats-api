@@ -34,4 +34,20 @@ public class PlayerMatchStats {
     private Integer assists;
     @Column(name = "headshots")
     private Integer headshots;
+
+    public Double getKillDeathRatio() {
+        if (deaths == null || deaths == 0) {
+            return (double) kills;
+        }
+
+        return (double) kills / deaths;
+    }
+
+    public Double getHeadshotPercentage() {
+        if (this.kills == null || this.kills == 0) {
+            return 0.0;
+        }
+
+        return (double) this.headshots / this.kills * 100.0;
+    }
 }
