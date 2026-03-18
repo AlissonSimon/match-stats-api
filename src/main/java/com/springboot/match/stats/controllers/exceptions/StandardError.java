@@ -18,5 +18,5 @@ public class StandardError {
     private Integer status;
     private String error;
     private String message;
-    private String patch;
+    private String path;
 }
