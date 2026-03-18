@@ -65,7 +65,7 @@ public class PlayerMatchStatsService {
     }
 
     private void validateIfPlayerAlreadyHasStatsInTheMatch(PlayerMatchStatsRequestDTO dto) {
-        if (statsRepository.existsByPlayerAndMatchId(dto.playerId(), dto.matchId())) {
+        if (statsRepository.existsByPlayerIdAndMatchId(dto.playerId(), dto.matchId())) {
             throw new PlayerAlreadyHasStatsException();
         }
     }
