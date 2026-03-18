@@ -48,7 +48,22 @@ public class PlayerMatchStatsService {
         PlayerMatchStats stats = toEntity(dto);
 
         stats = statsRepository.save(stats);
+
+        updatePlayerElo(stats);
+
         return toResponseDTO(stats);
+    }
+
+    private void updatePlayerElo(PlayerMatchStats stats) {
+        Player entity = playerRepository.findById(stats.getPlayer().getId())
+                .orElseThrow(ResourceNotFoundException::new);
+
+        int eloChange = stats.getResultType().getEloChange();
+
+        int newElo = Math.max(0, entity.getElo() + eloChange);
+        entity.setElo(newElo);
+
+        playerRepository.save(entity);
     }
 
     @Transactional
