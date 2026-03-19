@@ -77,8 +77,8 @@ class MatchServiceTest {
         MatchResponseDTO result = service.findById(ID_EXISTENT);
 
         assertNotNull(result);
-        assertEquals(ID_EXISTENT, result.id());
-        assertEquals(MAP_NAME_EXISTENT, result.mapName());
+        assertEquals(matchEntity.getId(), result.id());
+        assertEquals(matchEntity.getMap().getName(), result.mapName());
 
         verify(repository, times(1)).findById(ID_EXISTENT);
     }

@@ -29,8 +29,6 @@ class GameMapServiceTest {
     private static final Long ID_EXISTENT = 1L;
     private static final Long ID_NON_EXISTENT = 99L;
     private static final String NAME_EXISTENT = "Mirage";
-    private static final boolean ACTIVE = true;
-    private static final boolean INACTIVE = false;
 
     @InjectMocks
     private GameMapService service;
@@ -45,10 +43,10 @@ class GameMapServiceTest {
         gameMapEntity = new GameMap();
         gameMapEntity.setId(ID_EXISTENT);
         gameMapEntity.setName(NAME_EXISTENT);
-        gameMapEntity.setActive(ACTIVE);
+        gameMapEntity.setActive(true);
 
-        gameMapRequest = new GameMapRequestDTO(NAME_EXISTENT, ACTIVE);
-        gameMapStatusRequest = new GameMapStatusRequestDTO(ACTIVE);
+        gameMapRequest = new GameMapRequestDTO(NAME_EXISTENT, true);
+        gameMapStatusRequest = new GameMapStatusRequestDTO(true);
     }
 
     @Test
@@ -74,9 +72,9 @@ class GameMapServiceTest {
         GameMapResponseDTO result = service.findById(ID_EXISTENT);
 
         assertNotNull(result);
-        assertEquals(ID_EXISTENT, result.id());
-        assertEquals(NAME_EXISTENT, result.name());
-        assertEquals(ACTIVE, result.active());
+        assertEquals(gameMapEntity.getId(), result.id());
+        assertEquals(gameMapEntity.getName(), result.name());
+        assertEquals(gameMapEntity.isActive(), result.active());
 
         verify(repository, times(1)).findById(ID_EXISTENT);
     }
@@ -100,11 +98,11 @@ class GameMapServiceTest {
         when(repository.findById(ID_EXISTENT)).thenReturn(Optional.of(gameMapEntity));
         when(repository.save(any(GameMap.class))).thenReturn(gameMapEntity);
 
-        GameMapStatusRequestDTO updatedRequest = new GameMapStatusRequestDTO(INACTIVE);
+        GameMapStatusRequestDTO updatedRequest = new GameMapStatusRequestDTO(false);
         GameMapResponseDTO updatesResponse = service.update(ID_EXISTENT, updatedRequest);
 
         assertNotNull(updatesResponse);
-        assertEquals(INACTIVE, updatesResponse.active());
+        assertEquals(false, updatesResponse.active());
 
         verify(repository, times(1)).findById(ID_EXISTENT);
         verify(repository, times(1)).save(gameMapEntity);

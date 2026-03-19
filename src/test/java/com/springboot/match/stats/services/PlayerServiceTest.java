@@ -70,9 +70,9 @@ class PlayerServiceTest {
         PlayerResponseDTO result = service.findById(ID_EXISTENT);
 
         assertNotNull(result);
-        assertEquals(ID_EXISTENT, result.id());
-        assertEquals(NICKNAME_EXISTENT, result.nickname());
-        assertEquals(DEFAULT_ELO, result.elo());
+        assertEquals(playerEntity.getId(), result.id());
+        assertEquals(playerEntity.getNickname(), result.nickname());
+        assertEquals(playerEntity.getElo(), result.elo());
 
         verify(repository, times(1)).findById(ID_EXISTENT);
     }
