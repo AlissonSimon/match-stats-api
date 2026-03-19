@@ -56,7 +56,7 @@ public class MatchService {
     }
 
     private void validateIfEntityExists(Long id) {
-        if (repository.existsById(id)) {
+        if (!repository.existsById(id)) {
             throw new ResourceNotFoundException();
         }
     }
