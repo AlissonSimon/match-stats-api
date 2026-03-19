@@ -86,11 +86,7 @@ public class PlayerMatchStatsService {
     }
 
     private void validateIfPlayerAndMatchExists(Long playerId, Long matchId) {
-        if (!playerRepository.existsById(playerId)) {
-            throw new ResourceNotFoundException();
-        }
-
-        if (!matchRepository.existsById(matchId)) {
+        if (!playerRepository.existsById(playerId) || !matchRepository.existsById(matchId)) {
             throw new ResourceNotFoundException();
         }
     }
