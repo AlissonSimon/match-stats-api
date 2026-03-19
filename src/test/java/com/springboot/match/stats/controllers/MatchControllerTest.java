@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.springboot.match.stats.dtos.match.MatchRequestDTO;
 import com.springboot.match.stats.dtos.match.MatchResponseDTO;
 import com.springboot.match.stats.services.MatchService;
+import com.springboot.match.stats.services.exceptions.InactiveMapException;
 import com.springboot.match.stats.services.exceptions.ResourceNotFoundException;
 import org.junit.jupiter.api.*;
 import org.mockito.Mockito;
@@ -101,5 +102,55 @@ class MatchControllerTest {
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id").value(ID_EXISTENT))
                 .andExpect(jsonPath("$.mapName").value(MAP_NAME));
+    }
+
+    @Test
+    @Order(2)
+    @DisplayName("POST /matches --->> Should return 422 UNPROCESSABLE CONTENT when map is inactive")
+    void should_throw_exception_when_map_is_inactive() throws Exception {
+        Mockito.when(service.insert(any(MatchRequestDTO.class))).thenThrow(new InactiveMapException());
+
+        String jsonBody = objectMapper.writeValueAsString(requestDTO);
+
+        mockMvc.perform(post("/matches")
+                .content(jsonBody)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isUnprocessableContent());
+    }
+
+    @Test
+    @Order(2)
+    @DisplayName("POST /matches --->> Should return 404 NOT FOUND when map id is not found")
+    void should_throw_exception_when_map_id_is_not_found() throws Exception {
+        Mockito.when(service.insert(any(MatchRequestDTO.class))).thenThrow(new ResourceNotFoundException());
+
+        String jsonBody = objectMapper.writeValueAsString(requestDTO);
+
+        mockMvc.perform(post("/matches")
+                .content(jsonBody)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @Order(3)
+    @DisplayName("DELETE /matches/{id} --->> Should delete and return 204 NO CONTENT when delete is successful")
+    void should_delete_match_by_id_and_return_no_content() throws Exception {
+        Mockito.doNothing().when(service).delete(ID_EXISTENT);
+
+        mockMvc.perform(delete("/matches/{id}", ID_EXISTENT))
+                .andExpect(status().isNoContent());
+    }
+
+    @Test
+    @Order(3)
+    @DisplayName("DELETE /matches/{id} --->> Should return 404 NOT FOUND when id does not exist")
+    void should_throw_exception_when_id_is_not_found_and_deleted() throws Exception {
+        Mockito.doThrow(new ResourceNotFoundException()).when(service).delete(ID_NON_EXISTENT);
+
+        mockMvc.perform(delete("/matches/{id}", ID_NON_EXISTENT))
+                .andExpect(status().isNotFound());
     }
 }
