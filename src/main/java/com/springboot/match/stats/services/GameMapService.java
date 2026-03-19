@@ -100,7 +100,8 @@ public class GameMapService {
                 entity.getId(),
                 entity.getName(),
                 entity.isActive(),
-                entity.getCreatedAt()
+                entity.getCreatedAt(),
+                entity.getUpdatedAt()
         );
     }
 }

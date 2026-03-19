@@ -20,7 +20,7 @@ class GameMapRepositoryTest {
 
     @Test
     void should_return_true_if_map_exists_by_name() {
-        GameMap map = new GameMap(null, "Mirage", true, null);
+        GameMap map = new GameMap(null, "Mirage", true, null, null);
         entityManager.persist(map);
 
         boolean exists = repository.existsByName("Mirage");

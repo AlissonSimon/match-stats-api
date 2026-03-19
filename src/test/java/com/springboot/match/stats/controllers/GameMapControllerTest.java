@@ -58,6 +58,7 @@ class GameMapControllerTest {
                 ID_EXISTENT,
                 NAME_EXISTENT,
                 ACTIVE_MAP,
+                null,
                 null
         );
     }

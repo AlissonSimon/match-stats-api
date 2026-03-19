@@ -6,5 +6,6 @@ public record GameMapResponseDTO(
         Long id,
         String name,
         boolean active,
-        LocalDateTime createdAt
+        LocalDateTime createdAt,
+        LocalDateTime updatedAt
 ) {}
