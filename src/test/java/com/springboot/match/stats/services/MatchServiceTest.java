@@ -98,6 +98,24 @@ class MatchServiceTest {
     }
 
     @Test
+    void should_delete_match_by_id() {
+        when(repository.existsById(ID_EXISTENT)).thenReturn(true);
+
+        service.delete(ID_EXISTENT);
+
+        verify(repository, times(1)).deleteById(ID_EXISTENT);
+    }
+
+    @Test
+    void should_throw_exception_when_id_is_not_deleted() {
+        when(repository.existsById(anyLong())).thenReturn(false);
+
+        assertThrows(ResourceNotFoundException.class, () -> service.delete(ID_NON_EXISTENT));
+
+        verify(repository, never()).deleteById(anyLong());
+    }
+
+    @Test
     void should_throw_exception_when_id_is_not_found() {
         when(repository.findById(ID_NON_EXISTENT)).thenReturn(Optional.empty());
 
