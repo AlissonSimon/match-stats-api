@@ -106,6 +106,8 @@ class PlayerMatchStatsServiceTest {
         assertEquals(statsEntity.getHeadshots(), result.get(0).headshots());
         assertEquals(statsEntity.getKillDeathRatio(), result.get(0).killDeathRatio());
         assertEquals(statsEntity.getHeadshotPercentage(), result.get(0).headshotPercentage());
+
+        verify(statsRepository, times(1)).findAll();
     }
 
     @Test
@@ -125,6 +127,8 @@ class PlayerMatchStatsServiceTest {
         assertEquals(statsEntity.getHeadshots(), result.headshots());
         assertEquals(statsEntity.getKillDeathRatio(), result.killDeathRatio());
         assertEquals(statsEntity.getHeadshotPercentage(), result.headshotPercentage());
+
+        verify(statsRepository, times(1)).findById(ID_EXISTENT);
     }
 
     @Test
