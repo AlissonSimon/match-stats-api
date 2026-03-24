@@ -54,6 +54,13 @@ public class PlayerMatchStatsService {
         return toResponseDTO(stats);
     }
 
+    @Transactional
+    public void delete(Long id) {
+        validateIfEntityExists(id);
+
+        statsRepository.deleteById(id);
+    }
+
     private void updatePlayerElo(PlayerMatchStats stats) {
         Player entity = playerRepository.findById(stats.getPlayer().getId())
                 .orElseThrow(ResourceNotFoundException::new);
@@ -64,13 +71,6 @@ public class PlayerMatchStatsService {
         entity.setElo(newElo);
 
         playerRepository.save(entity);
-    }
-
-    @Transactional
-    public void delete(Long id) {
-        validateIfEntityExists(id);
-
-        statsRepository.deleteById(id);
     }
 
     private void validateIfEntityExists(Long id) {
