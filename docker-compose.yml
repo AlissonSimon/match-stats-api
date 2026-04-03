@@ -1,0 +1,10 @@
+services:
+  mysql-db:
+    image: mysql:8.0
+    container_name: match-stats-db
+    environment:
+      MYSQL_DATABASE: match_stats
+      MYSQL_ROOT_PASSWORD: mysql123
+    ports:
+      - "3305:3306"
+    restart: always
