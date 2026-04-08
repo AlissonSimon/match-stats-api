@@ -91,7 +91,7 @@ match.stats/
 
 O projeto está containerizado para facilitar o setup inicial.
 
-1. Clone o repositório: `git clone https://github.com/seu-usuario/match-stats-api.git`
+1. Clone o repositório: `git clone https://github.com/AlissonSimon/match-stats-api.git`
 2. Na raiz do projeto, execute: `docker-compose up -d`
 3. A API estará disponível em `http://localhost:8080`
 4. Documentação Swagger: `http://localhost:8080/swagger-ui.html`
